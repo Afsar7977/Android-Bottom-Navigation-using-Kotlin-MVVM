@@ -86,16 +86,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:hint="@string/phone"
+            android:hint="@string/password"
             android:textColorHint="@color/gray">
 
             <EditText
-                android:id="@+id/phone"
+                android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="phone"
+                android:inputType="textPassword"
                 android:textColor="@color/gray"
-                app:backgroundTint="@color/black" />
+                app:backgroundTint="@color/black"
+                tools:ignore="TextFields" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView

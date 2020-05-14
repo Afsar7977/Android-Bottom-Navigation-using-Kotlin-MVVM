@@ -1,6 +1,8 @@
 package com.afsar.ekhidki.Models
 
 import com.afsar.ekhidki.Room.AppDb
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class Utils {
     private lateinit var user: User
@@ -12,5 +14,12 @@ class Utils {
             user = listIterator.next()
         }
         return user
+    }
+
+    companion object{
+        var retrofit = Retrofit.Builder()
+            .baseUrl("https://www.json-generator.com/api/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
 }

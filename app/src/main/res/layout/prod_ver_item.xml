@@ -14,7 +14,6 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="128dp"
@@ -30,11 +29,11 @@
             <ImageView
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_gravity="end"
+                android:layout_gravity="right"
                 android:layout_marginStart="5dp"
                 android:padding="5dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/verified" />
+                android:src="@drawable/gverified" />
         </FrameLayout>
 
 

@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +26,7 @@ import androidx.viewpager.widget.ViewPager
 import com.afsar.ekhidki.BuildConfig
 import com.afsar.ekhidki.DetailsPage
 import com.afsar.ekhidki.Models.Category
+import com.afsar.ekhidki.Models.Products
 import com.afsar.ekhidki.MyCart
 import com.afsar.ekhidki.R
 import com.afsar.ekhidki.ViewModel.VModel
@@ -94,9 +96,14 @@ class HomeFragment : Fragment() {
         recyclerView1.apply {
             val layoutManager1 = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
             recyclerView1.layoutManager = layoutManager1
-            sadapter1 = CustomAdapter1(category)
-            recyclerView1.adapter = sadapter1
-            sadapter1.notifyDataSetChanged()
+
+            vModel.getProducts().observe(this@HomeFragment, Observer { data ->
+                run {
+                    sadapter1 = CustomAdapter1(data as ArrayList<Products>)
+                    recyclerView1.adapter = sadapter1
+                    sadapter1.notifyDataSetChanged()
+                }
+            })
         }
     }
 
@@ -184,7 +191,7 @@ class HomeFragment : Fragment() {
     }
 
 
-    class CustomAdapter1(private val sList: ArrayList<Category>) :
+    class CustomAdapter1(private val sList: ArrayList<Products>) :
         RecyclerView.Adapter<CustomAdapter1.ViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -196,8 +203,8 @@ class HomeFragment : Fragment() {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val context = holder.itemView.context
             holder.itemView.addtoCart.setOnClickListener {
-                addToCart(sList[position])
-                Toast.makeText(context, "Add To Cart", Toast.LENGTH_LONG).show()
+//                addToCart(sList[position])
+                Toast.makeText(context, "Add To Cart Coming Soon!!", Toast.LENGTH_LONG).show()
             }
             holder.itemView.body.setOnClickListener {
                 context.startActivity(Intent(context, DetailsPage::class.java))
@@ -211,13 +218,16 @@ class HomeFragment : Fragment() {
 
         class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-            fun bindItems(sdata: Category) {
+            fun bindItems(sdata: Products) {
                 Log.d("onActivityCreated", "called")
                 val body = itemView.findViewById<CardView>(R.id.body)
                 val name = itemView.findViewById<TextView>(R.id.name)
                 val desc = itemView.findViewById<TextView>(R.id.description)
                 val cart = itemView.findViewById<ImageView>(R.id.addtoCart)
+                val prod_img = itemView.findViewById<ImageView>(R.id.img)
                 name.text = sdata.name
+                desc.text = sdata.desc
+                Picasso.get().load(sdata.image).placeholder(R.drawable.trans_vada).into(prod_img)
             }
         }
     }

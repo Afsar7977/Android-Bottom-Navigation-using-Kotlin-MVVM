@@ -1,22 +1,29 @@
 package com.afsar.ekhidki
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.core.app.NavUtils
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.afsar.ekhidki.Models.Category
-import com.afsar.ekhidki.ViewModel.VModel
+import androidx.room.Room
+import com.afsar.ekhidki.Models.Products
+import com.afsar.ekhidki.Room.AppDb1
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_my_cart.*
+import kotlinx.android.synthetic.main.prod_ver_item.view.*
+import kotlinx.android.synthetic.main.prod_ver_item.view.body
+import kotlinx.android.synthetic.main.series_item.view.*
 
 
 class MyCart : AppCompatActivity() {
@@ -24,8 +31,8 @@ class MyCart : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     lateinit var sadapter1: CustomAdapter1
     lateinit var layoutManager: GridLayoutManager
-    lateinit var vModel: VModel
-    private var categoryList: ArrayList<Category> = ArrayList()
+    private lateinit var categoryList: ArrayList<Products>
+    lateinit var appDb1: AppDb1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,18 +43,17 @@ class MyCart : AppCompatActivity() {
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
         recyclerView = findViewById(R.id.cart_recycler_view)
-        layoutManager = GridLayoutManager(this, 2)
-        recyclerView.layoutManager = layoutManager
+        val layoutManager1 = LinearLayoutManager(this@MyCart, LinearLayoutManager.VERTICAL, false)
+        recyclerView.layoutManager = layoutManager1
 
         try {
-            list.add(sdata)
-            vModel = ViewModelProviders.of(this).get(VModel::class.java)
-            vModel.getCartData(list).observe(this, Observer { data ->
-                categoryList.addAll(data)
-                sadapter1 = CustomAdapter1(categoryList)
-                recyclerView.adapter = sadapter1
-                sadapter1.notifyDataSetChanged()
-            })
+            categoryList = ArrayList()
+            appDb1 = Room.databaseBuilder(applicationContext, AppDb1::class.java, "Products")
+                .allowMainThreadQueries().fallbackToDestructiveMigration().build()
+            categoryList.addAll(appDb1.productsDao().getProducts())
+            sadapter1 = CustomAdapter1(categoryList)
+            recyclerView.adapter = sadapter1
+            sadapter1.notifyDataSetChanged()
         } catch (e: Exception) {
             empty_cart.visibility = View.VISIBLE
             Toast.makeText(this@MyCart, "Oops Your Cart is Empty", Toast.LENGTH_LONG).show()
@@ -55,7 +61,7 @@ class MyCart : AppCompatActivity() {
         }
     }
 
-    class CustomAdapter1(private val sList: ArrayList<Category>) :
+    class CustomAdapter1(private val sList: ArrayList<Products>) :
         RecyclerView.Adapter<CustomAdapter1.ViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -65,6 +71,14 @@ class MyCart : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            val context = holder.itemView.context
+            holder.itemView.cart_body.setOnClickListener {
+                val intent = Intent(context, DetailsPage::class.java)
+                intent.putExtra("name", sList[position].name)
+                intent.putExtra("url", sList[position].image)
+                intent.putExtra("details", sList[position].desc)
+                context.startActivity(intent)
+            }
             holder.bindItems(sList[position])
         }
 
@@ -74,18 +88,17 @@ class MyCart : AppCompatActivity() {
 
         class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-            fun bindItems(sdata: Category) {
+            fun bindItems(sdata: Products) {
                 Log.d("onActivityCreated", "called")
+                val body =  itemView.findViewById<CardView>(R.id.body)
                 val name = itemView.findViewById<TextView>(R.id.name)
+                val desc = itemView.findViewById<TextView>(R.id.description)
+                val image = itemView.findViewById<ImageView>(R.id.img)
                 name.text = sdata.name
+                desc.text = sdata.desc
+                Picasso.get().load(sdata.image).placeholder(R.drawable.trans_vada).into(image)
             }
         }
-    }
-
-
-    companion object {
-        lateinit var sdata: Category
-        var list: ArrayList<Category> = ArrayList()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

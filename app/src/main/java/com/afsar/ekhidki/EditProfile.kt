@@ -70,25 +70,47 @@ class EditProfile : AppCompatActivity() {
         }
 
         try {
+            flag = intent.getStringExtra("flag")!!
             try {
-                flag = intent.getStringExtra("flag")!!
                 when (flag) {
+                    "logout" -> {
+                        editprofile.visibility = View.GONE
+                        logout.visibility = View.VISIBLE
+                        logout.setOnClickListener {
+                            editor.clear()
+                            editor.apply()
+                            appDb.userDao().deleteUser(
+                                User(
+                                    firstname.text.toString(),
+                                    lastname.text.toString(),
+                                    age.text.toString(),
+                                    user_gender,
+                                    email.text.toString(),
+                                    password.text.toString()
+                                )
+                            )
+                            val intent = Intent(this@EditProfile, Login::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                        }
+                    }
                     "!log" -> {
                         editprofile.text = "Register"
+                        editprofile.setOnClickListener {
+                            manageUser(
+                                firstname.text.toString(),
+                                lastname.text.toString(),
+                                age.text.toString(),
+                                user_gender,
+                                email.text.toString(),
+                                password.text.toString(), "insert"
+                            )
+                        }
                     }
                 }
-                editprofile.setOnClickListener {
-                    manageUser(
-                        firstname.text.toString(),
-                        lastname.text.toString(),
-                        age.text.toString(),
-                        user_gender,
-                        email.text.toString(),
-                        password.text.toString(), "insert"
-                    )
-                }
             } catch (e: Exception) {
-                Log.d("error", "called")
+                Log.d("error", "occurred")
+                e.printStackTrace()
             }
         } catch (e: Exception) {
             editprofile.text = "Update Profile"

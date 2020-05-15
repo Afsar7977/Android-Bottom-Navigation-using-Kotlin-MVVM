@@ -68,7 +68,7 @@
                 android:ellipsize="marquee"
                 android:gravity="top|start"
                 android:lineHeight="12sp"
-                android:lines="3"
+                android:lines="4"
                 android:paddingStart="3dp"
                 android:paddingEnd="3dp"
                 android:text="@string/vada_pav_info"

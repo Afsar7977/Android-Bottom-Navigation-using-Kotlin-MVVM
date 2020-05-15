@@ -15,7 +15,7 @@ data class Products(
     var desc: String,
     @SerializedName("id")
     @ColumnInfo(name = "id")
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = false)
     var id: Int,
     @SerializedName("name")
     @ColumnInfo(name = "name")

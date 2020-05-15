@@ -207,7 +207,7 @@
                         android:layout_marginTop="5dp"
                         android:layout_weight="0.3"
                         android:gravity="center"
-                        android:text="₹20 only"
+                        android:text="₹30 only"
                         android:textColor="@color/salmon"
                         android:textSize="20sp"
                         android:textStyle="bold"

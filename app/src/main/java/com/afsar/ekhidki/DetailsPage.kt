@@ -12,6 +12,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_details_page.*
 
 class DetailsPage : AppCompatActivity() {
@@ -23,14 +24,14 @@ class DetailsPage : AppCompatActivity() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         var scrollView = findViewById<ScrollView>(R.id.scrollView)
-        var imagedesc = findViewById<ImageView>(R.id.imagedesc)
+        val imagedesc = findViewById<ImageView>(R.id.imagedesc)
 
         val plusbtn = findViewById<Button>(R.id.add)
         val minusbtn = findViewById<Button>(R.id.minus)
         var addtoCart = findViewById<Button>(R.id.footer_cart)
 
-        var descriptionTitle = findViewById<TextView>(R.id.desc_title)
-        var descriptionText = findViewById<TextView>(R.id.desc_text)
+        val descriptionTitle = findViewById<TextView>(R.id.desc_title)
+        val descriptionText = findViewById<TextView>(R.id.desc_text)
         var disclaimer = findViewById<TextView>(R.id.dump_text)
         var deliverable = findViewById<TextView>(R.id.card1_title)
         var parcelable = findViewById<TextView>(R.id.card2_title)
@@ -39,6 +40,14 @@ class DetailsPage : AppCompatActivity() {
 
         var cardView1 = findViewById<CardView>(R.id.card1)
         var cardView2 = findViewById<CardView>(R.id.card2)
+
+        Picasso
+            .get()
+            .load(intent.getStringExtra("url"))
+            .placeholder(R.drawable.trans_vada)
+            .into(imagedesc)
+        descriptionTitle.text = intent.getStringExtra("name")
+        descriptionText.text = intent.getStringExtra("details")
 
         plusbtn.setOnClickListener {
             addInteger(cartnoTxt.text.toString())
@@ -57,7 +66,7 @@ class DetailsPage : AppCompatActivity() {
                 i++
                 val j: Int = i
                 cartno_text.text = j.toString()
-                val priceTxt = 20.times(j)
+                val priceTxt = 30.times(j)
                 Log.d("priceTxt", priceTxt.toString())
                 price.text = "₹$priceTxt only"
             }
@@ -75,7 +84,7 @@ class DetailsPage : AppCompatActivity() {
                 i--
                 val j: Int = i
                 cartno_text.text = j.toString()
-                val priceTxt = 20.times(j)
+                val priceTxt = 30.times(j)
                 Log.d("priceTxt", priceTxt.toString())
                 price.text = "₹$priceTxt only"
             }

@@ -21,14 +21,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.afsar.ekhidki.BuildConfig
 import com.afsar.ekhidki.DetailsPage
-import com.afsar.ekhidki.Models.Category
 import com.afsar.ekhidki.Models.Products
-import com.afsar.ekhidki.MyCart
 import com.afsar.ekhidki.R
+import com.afsar.ekhidki.Room.AppDb1
 import com.afsar.ekhidki.ViewModel.VModel
 import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
@@ -38,17 +38,14 @@ import kotlinx.android.synthetic.main.prod_ver_item.view.*
 class HomeFragment : Fragment() {
 
     private lateinit var rootView: View
-    private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerView1: RecyclerView
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager
     lateinit var myPager: MyPager
-    lateinit var sadapter: CustomAdapter
     lateinit var sadapter1: CustomAdapter1
     lateinit var layoutManager: LinearLayoutManager
     private lateinit var vModel: VModel
-
-    private lateinit var category: ArrayList<Category>
+    lateinit var appDb1: AppDb1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,8 +67,8 @@ class HomeFragment : Fragment() {
     private fun initView() {
         Log.d("initView", "called")
         vModel = ViewModelProviders.of(this).get(VModel::class.java)
+        HomeFragment.context = context!!
         var scrollView: NestedScrollView = rootView.findViewById(R.id.home_body)
-        recyclerView = rootView.findViewById(R.id.my_recycler_view)
         recyclerView1 = rootView.findViewById(R.id.products_recycler_view)
         tabLayout = rootView.findViewById(R.id.tabDots)
         viewPager = rootView.findViewById(R.id.pager)
@@ -79,25 +76,11 @@ class HomeFragment : Fragment() {
         myPager = MyPager(activity)
         viewPager.adapter = myPager
 
-        category = ArrayList()
-        category.add(Category("VadaPav", "Famous Snack"))
-        category.add(Category("SamosaPav", "Famous Snack"))
-        category.add(Category("BhajiPav", "Famous Snack"))
-        category.add(Category("ManchurianPav", "Famous Snack"))
-
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-            recyclerView.layoutManager = layoutManager
-            sadapter = CustomAdapter(category)
-            recyclerView.adapter = sadapter
-            sadapter.notifyDataSetChanged()
-        }
-
         recyclerView1.apply {
             val layoutManager1 = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
             recyclerView1.layoutManager = layoutManager1
 
-            vModel.getProducts().observe(this@HomeFragment, Observer { data ->
+            vModel.getProducts(context).observe(this@HomeFragment, Observer { data ->
                 run {
                     sadapter1 = CustomAdapter1(data as ArrayList<Products>)
                     recyclerView1.adapter = sadapter1
@@ -162,35 +145,6 @@ class HomeFragment : Fragment() {
     }
 
 
-    class CustomAdapter(private val sList: ArrayList<Category>) :
-        RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val v = LayoutInflater.from(parent.context)
-                .inflate(R.layout.series_item, parent, false)
-            return ViewHolder(v)
-        }
-
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val context = holder.itemView.context
-            holder.bindItems(sList[position])
-        }
-
-        override fun getItemCount(): Int {
-            return sList.size
-        }
-
-        class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-            fun bindItems(sdata: Category) {
-                Log.d("onActivityCreated", "called")
-                val name = itemView.findViewById<TextView>(R.id.name)
-                name.text = sdata.name
-            }
-        }
-    }
-
-
     class CustomAdapter1(private val sList: ArrayList<Products>) :
         RecyclerView.Adapter<CustomAdapter1.ViewHolder>() {
 
@@ -203,11 +157,15 @@ class HomeFragment : Fragment() {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val context = holder.itemView.context
             holder.itemView.addtoCart.setOnClickListener {
-//                addToCart(sList[position])
+                addToCart(sList[position])
                 Toast.makeText(context, "Add To Cart Coming Soon!!", Toast.LENGTH_LONG).show()
             }
             holder.itemView.body.setOnClickListener {
-                context.startActivity(Intent(context, DetailsPage::class.java))
+                val intent = Intent(context, DetailsPage::class.java)
+                intent.putExtra("name", sList[position].name)
+                intent.putExtra("url", sList[position].image)
+                intent.putExtra("details", sList[position].desc)
+                context.startActivity(intent)
             }
             holder.bindItems(sList[position])
         }
@@ -235,9 +193,13 @@ class HomeFragment : Fragment() {
     companion object {
         fun newInstance(): HomeFragment = HomeFragment()
         var TAG = HomeFragment::class.java.simpleName
+        lateinit var context: Context
+        lateinit var appDb1: AppDb1
         var thumbnail: String = "https://photos.google.com/?tab=iq&authuser=0&pageId=none"
-        fun addToCart(sdata: Category) {
-            MyCart.sdata = sdata
+        fun addToCart(sdata: Products) {
+            appDb1 = Room.databaseBuilder(context, AppDb1::class.java, "Products")
+                .allowMainThreadQueries().fallbackToDestructiveMigration().build()
+            appDb1.productsDao().insertProduct(sdata)
         }
     }
 }

@@ -2,7 +2,6 @@ package com.afsar.ekhidki.Models
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import com.google.gson.annotations.SerializedName
 
 @Entity(primaryKeys = ["email", "password"])
 data class User(

@@ -1,3 +1,5 @@
+@file:Suppress("PrivatePropertyName")
+
 package com.afsar.ekhidki
 
 import android.annotation.SuppressLint

@@ -22,8 +22,6 @@ import com.afsar.ekhidki.Models.Products
 import com.afsar.ekhidki.Room.AppDb1
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_my_cart.*
-import kotlinx.android.synthetic.main.prod_ver_item.view.*
-import kotlinx.android.synthetic.main.prod_ver_item.view.body
 import kotlinx.android.synthetic.main.series_item.view.*
 
 

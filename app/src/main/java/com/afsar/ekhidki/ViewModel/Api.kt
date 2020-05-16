@@ -5,6 +5,6 @@ import retrofit2.Response
 import retrofit2.http.GET
 
 interface Api {
-    @GET("json/get/bVUvMmopua?indent=3")
+    @GET("json/get/cgfvMAVdLm?indent=3")
     suspend fun getProducts(): Response<List<Products>>
 }

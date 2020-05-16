@@ -52,20 +52,17 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d("oncreateView", "called")
         rootView = inflater.inflate(R.layout.home_fragment, container, false)
         return rootView
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        Log.d("onActivityCreated", "called")
         super.onActivityCreated(savedInstanceState)
         initView()
     }
 
 
     private fun initView() {
-        Log.d("initView", "called")
         vModel = ViewModelProviders.of(this).get(VModel::class.java)
         HomeFragment.context = context!!
         var scrollView: NestedScrollView = rootView.findViewById(R.id.home_body)
@@ -165,6 +162,7 @@ class HomeFragment : Fragment() {
                 intent.putExtra("name", sList[position].name)
                 intent.putExtra("url", sList[position].image)
                 intent.putExtra("details", sList[position].desc)
+                intent.putExtra("price", sList[position].price)
                 context.startActivity(intent)
             }
             holder.bindItems(sList[position])
@@ -176,15 +174,17 @@ class HomeFragment : Fragment() {
 
         class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+            @SuppressLint("SetTextI18n")
             fun bindItems(sdata: Products) {
-                Log.d("onActivityCreated", "called")
                 val body = itemView.findViewById<CardView>(R.id.body)
                 val name = itemView.findViewById<TextView>(R.id.name)
                 val desc = itemView.findViewById<TextView>(R.id.description)
+                val pricetxt = itemView.findViewById<TextView>(R.id.review)
                 val cart = itemView.findViewById<ImageView>(R.id.addtoCart)
                 val prod_img = itemView.findViewById<ImageView>(R.id.img)
                 name.text = sdata.name
                 desc.text = sdata.desc
+                pricetxt.text = "₹${sdata.price} only"
                 Picasso.get().load(sdata.image).placeholder(R.drawable.trans_vada).into(prod_img)
             }
         }

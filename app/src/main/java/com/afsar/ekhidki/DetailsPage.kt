@@ -14,10 +14,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_details_page.*
+import kotlin.properties.Delegates
 
+@Suppress("SpellCheckingInspection")
+@SuppressLint("SetTextI18n")
 class DetailsPage : AppCompatActivity() {
 
-    @SuppressLint("SetTextI18n")
+    private var priceText by Delegates.notNull<Int>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details_page)
@@ -40,7 +44,7 @@ class DetailsPage : AppCompatActivity() {
 
         var cardView1 = findViewById<CardView>(R.id.card1)
         var cardView2 = findViewById<CardView>(R.id.card2)
-
+        priceText = intent.getIntExtra("price", 1)
         Picasso
             .get()
             .load(intent.getStringExtra("url"))
@@ -48,6 +52,7 @@ class DetailsPage : AppCompatActivity() {
             .into(imagedesc)
         descriptionTitle.text = intent.getStringExtra("name")
         descriptionText.text = intent.getStringExtra("details")
+        price.text = "₹$priceText only"
 
         plusbtn.setOnClickListener {
             addInteger(cartnoTxt.text.toString())
@@ -58,7 +63,6 @@ class DetailsPage : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun addInteger(addNo: String) {
         try {
             var i: Int = addNo.toInt()
@@ -66,8 +70,7 @@ class DetailsPage : AppCompatActivity() {
                 i++
                 val j: Int = i
                 cartno_text.text = j.toString()
-                val priceTxt = 30.times(j)
-                Log.d("priceTxt", priceTxt.toString())
+                val priceTxt = priceText.times(j)
                 price.text = "₹$priceTxt only"
             }
         } catch (e: Exception) {
@@ -76,7 +79,6 @@ class DetailsPage : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun minusInteger(minusNo: String) {
         try {
             var i: Int = minusNo.toInt()
@@ -84,8 +86,7 @@ class DetailsPage : AppCompatActivity() {
                 i--
                 val j: Int = i
                 cartno_text.text = j.toString()
-                val priceTxt = 30.times(j)
-                Log.d("priceTxt", priceTxt.toString())
+                val priceTxt = priceText.times(j)
                 price.text = "₹$priceTxt only"
             }
         } catch (e: Exception) {

@@ -9,5 +9,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:src="@drawable/aatman_logo_sq" />
+        android:src="@drawable/ecommerce_icon1" />
 </RelativeLayout>

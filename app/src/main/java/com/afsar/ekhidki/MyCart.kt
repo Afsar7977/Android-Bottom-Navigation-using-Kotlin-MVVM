@@ -1,5 +1,6 @@
 package com.afsar.ekhidki
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -77,6 +78,7 @@ class MyCart : AppCompatActivity() {
                 intent.putExtra("name", sList[position].name)
                 intent.putExtra("url", sList[position].image)
                 intent.putExtra("details", sList[position].desc)
+                intent.putExtra("price", sList[position].price)
                 context.startActivity(intent)
             }
             holder.bindItems(sList[position])
@@ -88,14 +90,16 @@ class MyCart : AppCompatActivity() {
 
         class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+            @SuppressLint("SetTextI18n")
             fun bindItems(sdata: Products) {
-                Log.d("onActivityCreated", "called")
                 val body =  itemView.findViewById<CardView>(R.id.body)
                 val name = itemView.findViewById<TextView>(R.id.name)
                 val desc = itemView.findViewById<TextView>(R.id.description)
                 val image = itemView.findViewById<ImageView>(R.id.img)
+                val price = itemView.findViewById<TextView>(R.id.price)
                 name.text = sdata.name
                 desc.text = sdata.desc
+                price.text= "₹${sdata.price} only"
                 Picasso.get().load(sdata.image).placeholder(R.drawable.trans_vada).into(image)
             }
         }

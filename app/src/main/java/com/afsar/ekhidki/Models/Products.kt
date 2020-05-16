@@ -7,6 +7,8 @@ import com.google.gson.annotations.SerializedName
 
 @Entity
 data class Products(
+    @ColumnInfo(name = "price")
+    var price: Int,
     @SerializedName("image")
     @ColumnInfo(name = "image")
     var image: String,

@@ -1,3 +1,5 @@
+@file:Suppress("LocalVariableName", "PackageName")
+
 package com.afsar.ekhidki.Fragments
 
 import android.content.Intent

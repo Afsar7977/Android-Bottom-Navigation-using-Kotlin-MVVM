@@ -13,15 +13,8 @@ import kotlinx.coroutines.*
 import java.lang.Exception
 
 class VModel : ViewModel() {
-    lateinit var categorylist: List<Products>
     lateinit var appDb3: AppDb3
     lateinit var vcontext: Context
-
-    private val cartData: MutableLiveData<List<Products>> by lazy {
-        MutableLiveData<List<Products>>().also {
-            loadCart()
-        }
-    }
 
     private val productsData: MutableLiveData<List<Products>> by lazy {
         MutableLiveData<List<Products>>().also {
@@ -29,26 +22,9 @@ class VModel : ViewModel() {
         }
     }
 
-    fun getCartData(data: List<Products>): LiveData<List<Products>> {
-        categorylist = data
-        return cartData
-    }
-
     fun getProducts(context: Context): LiveData<List<Products>> {
         vcontext = context
         return productsData
-    }
-
-    private fun loadCart() {
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
-                try {
-                    cartData.value = categorylist
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        }
     }
 
     private fun loadProducts() {

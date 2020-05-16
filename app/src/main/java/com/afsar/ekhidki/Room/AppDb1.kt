@@ -8,7 +8,7 @@ import com.afsar.ekhidki.Models.Products
 
 
 @Suppress("SENSELESS_COMPARISON")
-@Database(entities = [Products::class], version = 1)
+@Database(entities = [Products::class], version = 2)
 abstract class AppDb1 : RoomDatabase() {
     abstract fun productsDao(): ProductsDao
 

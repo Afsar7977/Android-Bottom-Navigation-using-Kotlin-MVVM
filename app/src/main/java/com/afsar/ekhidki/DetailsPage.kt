@@ -5,6 +5,7 @@ package com.afsar.ekhidki
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -12,6 +13,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.core.app.NavUtils
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_details_page.*
 import kotlin.properties.Delegates
@@ -25,6 +27,8 @@ class DetailsPage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details_page)
+        val actionBar = supportActionBar
+        actionBar?.setDisplayHomeAsUpEnabled(true)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         var scrollView = findViewById<ScrollView>(R.id.scrollView)
@@ -93,5 +97,15 @@ class DetailsPage : AppCompatActivity() {
             Log.d("error", "occurred")
             e.printStackTrace()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                NavUtils.navigateUpFromSameTask(this)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

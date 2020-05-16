@@ -60,6 +60,18 @@ class MyCart : AppCompatActivity() {
             Toast.makeText(this@MyCart, "Oops Your Cart is Empty", Toast.LENGTH_LONG).show()
             e.printStackTrace()
         }
+        try {
+            when {
+                categoryList.isEmpty() -> {
+                    empty_cart.visibility = View.VISIBLE
+                }
+                else -> {
+                    empty_cart.visibility = View.GONE
+                }
+            }
+        } catch (e: Exception) {
+            Log.d("error", e.toString())
+        }
     }
 
     class CustomAdapter1(private val sList: ArrayList<Products>) :
@@ -92,14 +104,15 @@ class MyCart : AppCompatActivity() {
 
             @SuppressLint("SetTextI18n")
             fun bindItems(sdata: Products) {
-                val body =  itemView.findViewById<CardView>(R.id.body)
+                @Suppress("UNUSED_VARIABLE")
+                val body = itemView.findViewById<CardView>(R.id.body)
                 val name = itemView.findViewById<TextView>(R.id.name)
                 val desc = itemView.findViewById<TextView>(R.id.description)
                 val image = itemView.findViewById<ImageView>(R.id.img)
                 val price = itemView.findViewById<TextView>(R.id.price)
                 name.text = sdata.name
                 desc.text = sdata.desc
-                price.text= "₹${sdata.price} only"
+                price.text = "₹${sdata.price} only"
                 Picasso.get().load(sdata.image).placeholder(R.drawable.trans_vada).into(image)
             }
         }

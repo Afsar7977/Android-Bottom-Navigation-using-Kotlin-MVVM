@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".EditProfile" />
-        <activity android:name=".DetailsPage" />
+        <activity android:name=".DetailsPage"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".MyCart"
             android:parentActivityName=".MainActivity" />

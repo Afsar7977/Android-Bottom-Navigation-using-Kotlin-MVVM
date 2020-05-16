@@ -155,7 +155,7 @@ class HomeFragment : Fragment() {
             val context = holder.itemView.context
             holder.itemView.addtoCart.setOnClickListener {
                 addToCart(sList[position])
-                Toast.makeText(context, "Add To Cart Coming Soon!!", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Added To Cart!!", Toast.LENGTH_LONG).show()
             }
             holder.itemView.body.setOnClickListener {
                 val intent = Intent(context, DetailsPage::class.java)
